@@ -1,3 +1,6 @@
+from stats import get_num_words
+import sys
+
 def count_letters(contents):
     character_count = {}
     lowered_contents = contents.lower()    
@@ -13,20 +16,30 @@ def sort_on(dict):
     return dict["num"]
 
 def main():
-    with open("books/frankenstein.txt") as f:
+
+    if len(sys.argv) < 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+
+    book = sys.argv[1]
+    total_count = get_num_words(book)
+
+    with open(book) as f:
         file_contents = f.read()
-    total_count = len(file_contents.split())
 
     chracter_count = count_letters(file_contents)
     sorted_count = dict(sorted(chracter_count.items(), reverse=True, key=lambda item: item[1]))
 
-    print("--- Begin report of books/frankenstein.txt ---")
-    print(f"{total_count} words found in the document")
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book}...")
+    print("----------- Word Count ----------")
+    print(f"Found {total_count} total words")
+    print("--------- Character Count -------")
 
     for letters in sorted_count:
         if letters.isalpha():
-            print(f"The '{letters}' character was found {chracter_count[letters]} times")
+            print(f"{letters}: {chracter_count[letters]}")
 
-    print("--- End report ---")
+    print("============= END ===============")
 
 main()
